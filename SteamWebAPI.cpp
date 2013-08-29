@@ -33,10 +33,12 @@ std::string SteamWebAPI::getSteamXML(std::string URL, std::string filename){
 
 	//checking to see if the file is still relatively new, new meaning ~10 minutes here
 	//TODO: break this into another function
-	if(pastThreshold(file)){
+	if(!pastThreshold(file)){
+		std::cout << "No need to create new file" << std::endl;
 		CloseHandle(file);
 		return path;
 	}
+	std::cout << "Creating new file" << std::endl;
 
 	HINTERNET hOpen = InternetOpen(L"DotaRain", NULL, NULL, NULL, NULL);
 	HINTERNET hURL = InternetOpenUrl(hOpen, s2ws(URL).c_str(), NULL, NULL, INTERNET_FLAG_RELOAD | INTERNET_FLAG_DONT_CACHE, NULL);
@@ -73,7 +75,7 @@ bool SteamWebAPI::pastThreshold(HANDLE file){
 	else if(currentTime.wHour == modSysTime.wHour && currentTime.wMinute-modSysTime.wMinute < threshhold)
 		return false;
 
-	else if(currentTime.wHour > modSysTime.wHour && (currentTime.wMinute-60)+(modSysTime.wMinute) < threshhold)
+	else if(currentTime.wHour > modSysTime.wHour && (currentTime.wMinute)+(60-modSysTime.wMinute) < threshhold)
 		return false;
 
 	return true;
