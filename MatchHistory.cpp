@@ -6,7 +6,7 @@ MatchHistory::MatchHistory(std::string file_path){
 	pullMatches(match_history.FirstChildElement("result")->FirstChildElement("matches")->FirstChildElement("match"));
 }
 std::string MatchHistory::getMatch(int n){
-	if(n >= matchIDs.size())
+	if((unsigned int)n >= matchIDs.size())
 		return 0;
 	return matchIDs[n];
 }

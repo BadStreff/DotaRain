@@ -12,5 +12,6 @@ public:
 	std::string getMatch(int);
 private:
 	std::vector<std::string> matchIDs;
+
 	void pullMatches(tinyxml2::XMLNode *n);
 };
