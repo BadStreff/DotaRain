@@ -33,13 +33,10 @@ std::string SteamWebAPI::getSteamXML(std::string URL, std::string filename){
 
 	//checking to see if the file is still relatively new, new meaning ~10 minutes here
 	//TODO: break this into another function
-	_BY_HANDLE_FILE_INFORMATION fileInfo;
-	GetFileInformationByHandle(file, &fileInfo);
-	_SYSTEMTIME fileSysTime;
-	FileTimeToSystemTime((&(fileInfo.ftCreationTime)), &fileSysTime);
-	std::cout << "File Creation Time of " << filename << ": " << fileSysTime.wMinute << std::endl;
-	SYSTEMTIME st;
-	GetSystemTime(&st);
+	if(pastThreshold(file)){
+		CloseHandle(file);
+		return path;
+	}
 
 	HINTERNET hOpen = InternetOpen(L"DotaRain", NULL, NULL, NULL, NULL);
 	HINTERNET hURL = InternetOpenUrl(hOpen, s2ws(URL).c_str(), NULL, NULL, INTERNET_FLAG_RELOAD | INTERNET_FLAG_DONT_CACHE, NULL);
@@ -59,4 +56,25 @@ std::string SteamWebAPI::getSteamXML(std::string URL, std::string filename){
 	InternetCloseHandle(hOpen);
 	CloseHandle(file);
 	return path;
+}
+
+bool SteamWebAPI::pastThreshold(HANDLE file){
+	FILETIME modTime;
+	SYSTEMTIME modSysTime;
+	GetFileTime(file, 0, 0, &modTime);
+	FileTimeToSystemTime(&modTime, &modSysTime);
+	
+	SYSTEMTIME currentTime;
+	GetSystemTime(&currentTime);
+
+	if(currentTime.wDay > modSysTime.wDay)
+		return false;
+
+	else if(currentTime.wHour == modSysTime.wHour && currentTime.wMinute-modSysTime.wMinute < threshhold)
+		return false;
+
+	else if(currentTime.wHour > modSysTime.wHour && (currentTime.wMinute-60)+(modSysTime.wMinute) < threshhold)
+		return false;
+
+	return true;
 }
