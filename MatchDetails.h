@@ -14,6 +14,7 @@ class MatchDetails{
 public:
 	MatchDetails(std::string XMLPath);
 private:
-	std::vector< std::map<std::string,std::string> > playerDetails; //refactor into an object
-	std::map<std::string,std::string> matchResults;
+	//std::vector< std::map<std::string,std::string> >
+	std::map<std::string,std::string> details;
+	void getDetails(tinyxml2::XMLNode *n);
 };
