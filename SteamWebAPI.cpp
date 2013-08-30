@@ -31,9 +31,8 @@ std::string SteamWebAPI::getSteamXML(std::string URL, std::string filename){
 
 	HANDLE file = CreateFile(s2ws(path).c_str(),(GENERIC_READ | GENERIC_WRITE), 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	//checking to see if the file is still relatively new, new meaning ~10 minutes here
-	//TODO: break this into another function
-	if(!pastThreshold(file)){
+	//check to see if the file is still relatively new, new meaning ~10 minutes here
+	if((GetLastError() == ERROR_FILE_NOT_FOUND) && !pastThreshold(file)){
 		std::cout << "No need to create new file" << std::endl;
 		CloseHandle(file);
 		return path;
