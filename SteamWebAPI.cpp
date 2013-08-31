@@ -32,12 +32,18 @@ std::string SteamWebAPI::getSteamXML(std::string URL, std::string filename){
 	HANDLE file = CreateFile(s2ws(path).c_str(),(GENERIC_READ | GENERIC_WRITE), 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	//check to see if the file is still relatively new, new meaning ~10 minutes here
-	if((GetLastError() == ERROR_FILE_NOT_FOUND) && !pastThreshold(file)){
-		std::cout << "No need to create new file" << std::endl;
+	//this looks sloppy and needs refactored
+	if(GetLastError() != 183){
+		std::cout << "file had to be created" << std::endl;
+	}
+	else if(!pastThreshold(file)){
+		std::cout << "file is not past time threshhold" << std::endl;
 		CloseHandle(file);
 		return path;
 	}
-	std::cout << "Creating new file" << std::endl;
+	else
+		std::cout << "Creating new file" << std::endl;
+
 
 	HINTERNET hOpen = InternetOpen(L"DotaRain", NULL, NULL, NULL, NULL);
 	HINTERNET hURL = InternetOpenUrl(hOpen, s2ws(URL).c_str(), NULL, NULL, INTERNET_FLAG_RELOAD | INTERNET_FLAG_DONT_CACHE, NULL);
