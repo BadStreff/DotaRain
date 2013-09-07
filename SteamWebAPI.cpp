@@ -12,7 +12,7 @@ std::string SteamWebAPI::getMatchDetails(std::string matchID){
 	std::string url = std::string("https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/?format=XML");
 	url.append(std::string("&key=").append(API_KEY));
 	url.append(std::string("&match_id=").append(matchID));
-	return getSteamXML(url, "DOTARAIN-MatchDetails");
+	return getSteamXML(url, std::string("DOTARAIN-MatchDetails").append(matchID));
 }
 
 std::string SteamWebAPI::getHeroes(){
