@@ -16,9 +16,8 @@ std::string SteamWebAPI::getMatchDetails(std::string matchID){
 }
 
 std::string SteamWebAPI::getHeroes(){
-	std::string url = std::string("https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?format=XML");
+	std::string url = std::string("https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?format=XML&language=en_us");
 	url.append(std::string("&key=").append(API_KEY));
-	url.append("&language=en_us");
 	return getSteamXML(url, "DOTARAIN-Heroes.xml");
 }
 
